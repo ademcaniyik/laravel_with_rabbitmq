@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+
+  app1-sender:
+    build: 
+      context: ./app1-sender
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+  app2-receiver:
+    build: 
+      context: ./app2-receiver
+    ports:
+      - "8001:8001"
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
